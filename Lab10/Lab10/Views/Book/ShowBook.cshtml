@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Lab10.Models.Comment>
+
+@{
+    ViewData["Title"] = "ShowBook";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="BookFrame">
+
+    <h2><a asp-action="Books" asp-route-id="@ViewData["CurrentID"]"><</a> @ViewData["FileName"]</h2>
+    <a asp-action="Books" asp-route-id="@ViewData["CurrentID"]"></a>
+
+    @{
+        string namewoext;
+        string ext = "";
+        var name = ViewData["FileName"].ToString();
+        if (name.Contains("."))
+        {
+            namewoext = name.Substring(0, name.LastIndexOf('.'));
+            ext = System.IO.Path.GetExtension(name);
+        }
+        <script src="~/js/MyOwn.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+        <script src="~/js/epub.js" asp-append-version="true"></script>
+        @if (!ext.Equals(".epub"))
+        {
+        <div id="area1" class="epubarea" width="1100" height="500">
+            <iframe class="BookIFrame" id="area" src="~/File Storage/@ViewData["FileName"]#view=Fit" onclick="return false" width="1100" height="500"></iframe>
+        </div>
+            
+        }
+        @if (ext.Equals(".epub"))
+        {
+            <div id="area" class="epubarea" width="1100" height="500"></div>
+            <a id="prev" href="#prev" class="arrow" style="visibility: visible;">‹</a>
+            <a id="next" href="#next" class="arrow" style="visibility: visible;">›</a>
+            var fileName = @ViewData["FileName"].ToString();
+            <script>
+                renderEpub('@fileName');
+            </script>
+        }
+        <div id="centerID">
+            <button type="button" onclick="plus()">Zoom in</button>
+            <button type="button" onclick="minus()">Zoom out</button>
+        </div>
+    }
+
+
+</div>
+
+<div class="CommentBox">
+    <h2>Comments:</h2>
+
+    @if (User.IsInRole("User") || User.IsInRole("Admin"))
+    {
+        foreach (var comment in Model)
+        {
+            <h6>@comment.Commenter</h6>
+            <p>@Html.DisplayFor(modelItem => comment.CommentData)</p>
+        }
+    }
+</div>
+
+<div class="AddComment">
+    <div class="ListClass"> <a asp-action="AddComment" asp-route-filename="@ViewData["FileName"]" asp-route-id="@ViewData["BookID"]" asp-route-catId="@ViewData["CurrentID"]"> Comment </a> </div>
+</div>
+

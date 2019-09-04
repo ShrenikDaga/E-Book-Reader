@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Lab10.Models.Book>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<h4>@ViewData["CurrentCategory"]</h4>
+@if (User.IsInRole("Admin"))
+{
+    <div class="ListClass"> <a asp-controller="Home" asp-action="DeleteCategory" asp-route-id="@ViewData["CurrentID"]"> Delete </a> </div>
+}
+
+
+
+@if (User.IsInRole("User") || User.IsInRole("Admin"))
+{
+    <div class="recently-added-div">
+        @foreach (var book in Model)
+        {<div>
+    @{
+        string path = "/File Storage/" + book.Image;
+        <img class="recently-added-div-item" src="@path" onclick="location.href='@Url.Action("ShowBook", "Book", new { filename = book.BookName, id = book.BookID, catId = book.CategoryID })'" />
+    }
+    <div class="recently-div-book">
+        <div class="story-topic" onclick="location.href='@Url.Action("ShowBook", "Book", new { filename = book.BookName, id = book.BookID, catId = book.CategoryID })'">
+            @Html.DisplayFor(modelItem => book.BookName)
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="ListClass"> <a asp-action="EditBook" asp-route-id="@book.BookID"> Edit </a> </div>
+            <div class="ListClass"> <a asp-action="DeleteBook" asp-route-id="@book.BookID"> Delete </a></div>
+        }
+    </div>
+</div>
+
+        }
+    </div>
+}
+
+
+else
+{
+    <div class="LoginRedirect">
+        Please login to view the books. Thank you!
+    </div>
+    <div class="recently-added-div">
+        @foreach (var book in Model)
+        {
+        <div>
+            @{
+                string path = "/File Storage/" + book.Image;
+                <img class="recently-added-div-item" src="@path" />
+            }
+            <div class="recently-div-book">
+                <div class="story-topic">
+                    @Html.DisplayFor(modelItem => book.BookName)
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+}
+

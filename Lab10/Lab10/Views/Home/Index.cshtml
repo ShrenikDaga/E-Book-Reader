@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Lab10.Models.Category>
+@using Microsoft.AspNetCore.Hosting
+@inject IHostingEnvironment HostingEnvironment
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+
+<div class="slideshow-container-main">
+    @foreach (var image in Model)
+    {
+        var webRootPath = HostingEnvironment.WebRootPath;
+        var currImagePath = "/Pictures/CategoryImages/" + image.Image;
+        <div class="slider-block">
+            <img class="slide-main-Image" src="@currImagePath" onclick="location.href='@Url.Action("Books", "Book", new { id = image.CategoryID })'" />
+        </div>
+    }
+</div>
+
+
+@if (User.IsInRole("Admin"))
+{<p>
+        <a asp-action="CreateCategory">Create New Category</a>
+    </p>
+}
+
+<div class="recently-added-div">
+    @foreach (var category in Model)
+    {<div>
+            @{
+                string path = "/Pictures/CategoryImages/" + category.Image;
+                <img class="recently-added-div-item" src="@path" onclick="location.href='@Url.Action("Books", "Book", new { id = category.CategoryID })'" />
+            }
+            <div class="recently-div-text">
+                <div class="ntopic" onclick="location.href='@Url.Action("Books", "Book", new { id = category.CategoryID })'">
+                    @Html.DisplayFor(modelItem => category.CategoryName)
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+

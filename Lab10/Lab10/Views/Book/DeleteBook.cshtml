@@ -1,0 +1,12 @@
+﻿@model Lab10.Models.Book
+@{
+    ViewData["Title"] = "DeleteBook";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>DeleteBook</h1>
+
+<form asp-action="DeleteBook">
+    <input type="submit" value="Delete" class="btn btn-danger" /> |
+    <a asp-action="Index">Back to List</a>
+</form>
